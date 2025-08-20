@@ -4,11 +4,11 @@
 }
 
 :root{
-  --bgColor: #3f3f3f;
+  --bgColor: #9cc5fa;
   --bgColor2: #fff;
 }
 body{
-  background-color: var(--bgColor);
+  background-color: var(--bgColor2);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,27 +16,67 @@ body{
 
 .todoContainer{
   margin-top: 150px;
-  background-color: var(--bgColor2);
+  background-color: var(--bgColor);
   border-radius: 25px;
-  padding: 25px 75px;
-  width: fit-content;
+  padding: 25px 0;
+  min-width: 550px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+
+
+.inputContainer{
+  display: flex;
+}
+
+.todoInput{
+  background-color: white;
+  padding: 0 20px;
+  border-radius: 25px 0 0 25px;
+  display: flex;
+  align-items: center;
+}
+.todoInput input[type="text"]{
+  width: 100%;
+  outline: none;
+  border: none;
+}
+
+
+#addBtn{
+  background-color: orange;
+  outline: none;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 0 25px 25px 0;
+  
+}
+
+
+
+
+
+
+
+
+
 .todoItem{
-  background-color: var(--bgColor);
-  color: var(--bgColor2);
   padding: 5px 15px;
   border-radius: 10px;
   display: flex;
-  width: fit-content;
   align-items: center;
   gap:15px;
-  margin: 12px 0;
+  margin-top: 12px;
 }
-.todoData{
+
+#item{
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+/* .todoData{
   display: flex;
   gap: 15px
 }
@@ -54,4 +94,4 @@ body{
 }
 .btns *:active{
   transform: scale(1.025);
-}
+} */

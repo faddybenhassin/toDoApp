@@ -75,6 +75,7 @@ app.patch("/api/todo/:id",(req,res)=>{
 
     todos[foundIndex] = {...todos[foundIndex], ...body}
     res.status(200).send("item updated")
+    console.log(todos)
 });
 
 
