@@ -28,7 +28,7 @@ app.post("/api/todo",(req,res)=>{
             {
                 id: todos[todos.length - 1].id + 1,
                 text: text,
-                isDone: true
+                isDone: false
             }
         )
         res.status(201).send("item pushed successfuly")
@@ -75,7 +75,6 @@ app.patch("/api/todo/:id",(req,res)=>{
 
     todos[foundIndex] = {...todos[foundIndex], ...body}
     res.status(200).send("item updated")
-    console.log(todos)
 });
 
 
