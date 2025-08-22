@@ -1,34 +1,31 @@
 import { useState, useEffect } from "react";
 import { toggleItem, deleteItem, addItem } from "./services/services";
-
+import { FaTrash } from "react-icons/fa";
+import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
 function TodoItems({ data, callback }) {
   if (!data) return null;
   return data.map((item) => {
     return (
       <div className="todoItem" key={item.id}>
-        <div className="todoData">
-          <input
-            type="checkbox"
-            onChange={async () => {
-              await toggleItem(item.id, item.isDone);
-              callback();
-            }}
-            name="isDone"
-            id="isDone"
-            checked={item.isDone}
-          />
-          <p className="item">{item.text}</p>
+        <div
+          onClick={async () => {
+            await toggleItem(item.id, item.isDone);
+            callback();
+          }}
+          id="isDone"
+        >
+          {item.isDone ? <RiCheckboxCircleFill /> : <RiCheckboxCircleLine />}
         </div>
-        <div className="btns">
-          <input
-            type="button"
-            value="delete"
-            onClick={async () => {
-              await deleteItem(item.id);
-              callback();
-            }}
-          />
-        </div>
+
+        <p className="item">{item.text}</p>
+
+        <FaTrash
+          id="delBtn"
+          onClick={async () => {
+            await deleteItem(item.id);
+            callback();
+          }}
+        />
       </div>
     );
   });
@@ -57,25 +54,23 @@ function App() {
   return (
     <>
       <div className="todoContainer">
-        <h1>To-Do list📝</h1>
-        <div className="inputContainer">
-          <div className="todoInput">
-            <input
-              type="text"
-              onChange={(event) => {
-                setTodoInput(event.target.value);
-              }}
-              value={todoInput}
-            />
-          </div>
+        <h1>ToDo:</h1>
+
+        <div className="todoInput">
           <input
-            type="button"
-            value="add"
-            id="addBtn"
-            onClick={async () => {
-              await addItem(todoInput);
-              fetchData();
+            type="text"
+            placeholder="add task"
+            onChange={(event) => {
+              setTodoInput(event.target.value);
             }}
+            onKeyDown={async (event) => {
+              if (event.key == "Enter") {
+                await addItem(todoInput);
+                setTodoInput("");
+                fetchData();
+              }
+            }}
+            value={todoInput}
           />
         </div>
         <TodoItems data={data} callback={fetchData} />
