@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { toggleItem, deleteItem, addItem } from "./services/services";
 import { FaTrash } from "react-icons/fa";
 import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
-function TodoItems({ data, callback }) {
+import Edit from "./components/edit/edit";
+
+function TodoItems({ data, fetchData, setEdit }) {
   if (!data) return null;
   return data.map((item) => {
     return (
@@ -10,20 +12,28 @@ function TodoItems({ data, callback }) {
         <div
           onClick={async () => {
             await toggleItem(item.id, item.isDone);
-            callback();
+            fetchData();
           }}
           id="isDone"
         >
           {item.isDone ? <RiCheckboxCircleFill /> : <RiCheckboxCircleLine />}
         </div>
 
-        <p className="item">{item.text}</p>
+        <p
+          className="item"
+          style={{ textDecoration: item.isDone ? "line-through" : "none" }}
+          onClick={() => {
+            setEdit({ state: true, id: item.id, text: item.text });
+          }}
+        >
+          {item.text}
+        </p>
 
         <FaTrash
           id="delBtn"
           onClick={async () => {
             await deleteItem(item.id);
-            callback();
+            fetchData();
           }}
         />
       </div>
@@ -34,6 +44,7 @@ function TodoItems({ data, callback }) {
 function App() {
   const [todoInput, setTodoInput] = useState("");
   const [data, setData] = useState(null);
+  const [edit, setEdit] = useState({ state: false, id: null, text: null });
 
   async function fetchData() {
     try {
@@ -73,8 +84,17 @@ function App() {
             value={todoInput}
           />
         </div>
-        <TodoItems data={data} callback={fetchData} />
+        <TodoItems data={data} fetchData={fetchData} setEdit={setEdit} />
       </div>
+
+      {edit.state ? (
+        <Edit
+          fetchData={fetchData}
+          setEdit={setEdit}
+          id={edit.id}
+          text={edit.text}
+        />
+      ) : null}
     </>
   );
 }

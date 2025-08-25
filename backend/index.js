@@ -23,20 +23,17 @@ const todos = [
 // add item to the list
 app.post("/api/todo", (req, res) => {
     const { text } = req.body;
-    if (text.length > 0) {
-        todos.push(
-            {
-                id: todos[todos.length - 1].id + 1,
-                text: text,
-                isDone: false
-            }
-        )
-        res.status(201).send("item pushed successfuly")
-    } else {
-        res.status(400).send("ERR: no text was sent")
-
+    if (typeof text !== "string" || text.trim().length === 0) {
+        return res.status(400).send("ERR: no valid text was sent");
     }
-    res.status(404).send("error")
+
+    const newItem = {
+        id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 1,
+        text: text.trim(),
+        isDone: false
+    }
+    todos.push(newItem)
+    return res.status(201).json({ mesasge: "item added successfuly", item: newItem });
 
 });
 

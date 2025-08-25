@@ -17,6 +17,31 @@ export async function toggleItem(id, currState) {
   }
 }
 
+export async function editItem(id,text){
+  try {
+    const res = await fetch(`http://localhost:5000/api/todo/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: text }),
+    });
+    if (!res.ok) {
+      throw new Error("toggle request failed");
+    } else {
+      console.log("toggle request succedded");
+    }
+  } catch (error) {
+    console.log(`${error}`);
+  }
+}
+
+
+
+
+
+
+
 export async function deleteItem(id) {
   try {
     const res = await fetch(`http://localhost:5000/api/todo/${id}`, {
@@ -32,9 +57,7 @@ export async function deleteItem(id) {
   }
 }
 
-// async function editItem(){
 
-// }
 
 export async function addItem(text) {
   try {
