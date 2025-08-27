@@ -1,11 +1,18 @@
 import express from 'express'
 import cors from 'cors'
-
+import mongoose from "mongoose"
 
 const PORT = 5000
 const app = express()
 app.use(express.json())
 app.use(cors())
+
+
+const itemSchema = new mongoose.Schema({
+    id: Number,
+    text: String,
+    isDone: Boolean
+})
 
 const todos = [
     {
