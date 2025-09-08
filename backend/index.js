@@ -48,54 +48,58 @@ const todoModel = mongoose.model("todos", todoSchema)
 app.post("/api/todo", async (req, res) => {
     const { text } = req.body;
     if (typeof text !== "string" || text.trim().length === 0) {
-        return res.status(400).send("ERR: no valid text was sent");
+        return res.status(400).json({ error: "No valid text was sent." });
     }
 
     try {
-        const lastTodo = await todoModel.findOne().sort({ id: -1 })
+        const lastTodo = await todoModel.findOne().sort({ id: -1 });
         const todo = await todoModel.create({
             id: lastTodo ? lastTodo.id + 1 : 1,
             text: text.trim(),
-        })
-        await todo.save()
-        return res.status(201).json({ message: "item added successfully", item: todo });
+        });
+        await todo.save();
+        return res.status(201).json({ message: "Item added successfully.", item: todo });
     } catch (error) {
-        console.log(error)
-        return res.status(500).send("ERR: could not add item");
+        console.log(error);
+        return res.status(500).json({ error: "Could not add item." });
     }
-
 });
-
 
 
 
 //get all todo items
 app.get("/api/todo", async (req, res) => {
     try {
-        const todos = await todoModel.find()
-        res.json(todos)
+        const todos = await todoModel.find();
+        res.json(todos);
     } catch (error) {
-        console.log("tnekt")
+        console.log(error);
+        res.status(500).json({ error: "Could not fetch todos." });
     }
 })
 
 
 
 // get a specific todo item
-// app.get("/api/todo/:id", (req, res) => {
-//     const id = req.params.id;
-//     if (isNaN(id)) {
-//         return res.status(400).send("ERR: invalid Id")
-//     };
+app.get("/api/todo/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (isNaN(id)) {
+            return res.status(400).json({ error: "Invalid ID." });
+        }
 
-//     const todoItem = todos.find((todo) => todo.id === parseInt(id));
+        const todo = await todoModel.findOne({ id: id });
 
-//     if (!todoItem) {
-//         return res.status(404).send("ERR: no todo item found")
-//     };
+        if (!todo) {
+            return res.status(404).json({ error: "Todo item not found." });
+        }
 
-//     res.json(todoItem);
-// })
+        res.json(todo);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Could not fetch todo item." });
+    }
+})
 
 
 
@@ -105,23 +109,19 @@ app.patch("/api/todo/:id", async (req, res) => {
         const id = parseInt(req.params.id);
         const { text, isDone } = req.body;
 
-
         const todo = await todoModel.findOneAndUpdate(
             { id: id },
-            { ... (text !== undefined && { text }), ... (isDone !== undefined && { isDone }) },
+            { ...(text !== undefined && { text }), ...(isDone !== undefined && { isDone }) },
             { new: true }
-        )
+        );
         if (!todo) {
-            return res.status(404).send("ERR: todo item not found!")
+            return res.status(404).json({ error: "Todo item not found." });
         }
 
-        return res.status(200).json({ message: "item added successfully", item: todo });
-
-    }
-    catch (error) {
+        return res.status(200).json({ message: "Item updated successfully.", item: todo });
+    } catch (error) {
         console.error('Error updating item:', error);
-        return res.status(500).send("ERR: could not update item");
-
+        return res.status(500).json({ error: "Could not update item." });
     }
 });
 
@@ -131,22 +131,15 @@ app.delete("/api/todo/:id", async (req, res) => {
     try {
         const id = parseInt(req.params.id);
 
-
-
-        const todo = await todoModel.findOneAndDelete(
-            { id: id }
-        )
+        const todo = await todoModel.findOneAndDelete({ id: id });
         if (!todo) {
-            return res.status(404).send("ERR: todo item not found!")
+            return res.status(404).json({ error: "Todo item not found." });
         }
 
-        return res.status(200).json({ message: "item deleted successfully"});
-
-    }
-    catch (error) {
+        return res.status(200).json({ message: "Item deleted successfully." });
+    } catch (error) {
         console.error('Error deleting item:', error);
-        return res.status(500).send("ERR: could not delete item");
-
+        return res.status(500).json({ error: "Could not delete item." });
     }
 });
 
