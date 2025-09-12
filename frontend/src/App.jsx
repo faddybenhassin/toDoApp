@@ -4,6 +4,10 @@ import { FaTrash } from "react-icons/fa";
 import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
 import Edit from "./components/edit/edit";
 
+import { CreateBrowserRouter as Router, Route, Switch} from 'react-router-dom'
+
+
+
 function TodoItems({ data, fetchData, setEdit }) {
   if (!data) return null;
   return data.map((item) => {
@@ -41,8 +45,10 @@ function TodoItems({ data, fetchData, setEdit }) {
   });
 }
 
-function App() {
-  const [todoInput, setTodoInput] = useState("");
+
+
+function TodoContainer(){
+    const [todoInput, setTodoInput] = useState("");
   const [data, setData] = useState(null);
   const [edit, setEdit] = useState({ state: false, id: null, text: null });
 
@@ -97,6 +103,22 @@ function App() {
       ) : null}
     </>
   );
+}
+
+
+
+function App() {
+  <Router>
+
+    <Switch>
+      <Route exact path="/">
+        <TodoContainer></TodoContainer>
+      </Route>
+      <Route exact path="/login">
+        <h1>heloooooooooo</h1>
+      </Route>
+    </Switch>
+  </Router>
 }
 
 export default App;
