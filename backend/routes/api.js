@@ -1,6 +1,6 @@
 import express from "express"
 import todoModel from "../models/todo.js";
-
+import { verifyToken } from "../middleware/verify.js";
 
 const router = express.Router()
 
@@ -29,7 +29,7 @@ router.post("/api/todo", async (req, res) => {
 
 
 //get all todo items
-router.get("/api/todo", async (req, res) => {
+router.get("/api/todo",verifyToken, async (req, res) => {
     try {
         const todos = await todoModel.find();
         res.json(todos);
