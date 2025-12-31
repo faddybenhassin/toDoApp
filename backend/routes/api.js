@@ -6,17 +6,18 @@ const router = express.Router()
 
 
 // add item to the list
-router.post("/api/todo", async (req, res) => {
+router.post("/api/todo", verifyToken, async (req, res) => {
     const { text } = req.body;
     if (typeof text !== "string" || text.trim().length === 0) {
-        return res.status(400).json({ error: "No valid text was sent." });
+        return res.status(400).json({ error: "No valid text provided." });
     }
 
     try {
-        const lastTodo = await todoModel.findOne().sort({ id: -1 });
+        const lastTodo = await todoModel.findOne({ userId: req.user.id }).sort({ id: -1 });
         const todo = await todoModel.create({
             id: lastTodo ? lastTodo.id + 1 : 1,
             text: text.trim(),
+            userId: req.user.id,
         });
         await todo.save();
         return res.status(201).json({ message: "Item added successfully.", item: todo });
@@ -29,9 +30,9 @@ router.post("/api/todo", async (req, res) => {
 
 
 //get all todo items
-router.get("/api/todo",verifyToken, async (req, res) => {
+router.get("/api/todo", verifyToken, async (req, res) => {
     try {
-        const todos = await todoModel.find();
+        const todos = await todoModel.find({ userId: req.user.id });
         res.json(todos);
     } catch (error) {
         console.log(error);
@@ -42,14 +43,14 @@ router.get("/api/todo",verifyToken, async (req, res) => {
 
 
 // get a specific todo item
-router.get("/api/todo/:id", async (req, res) => {
+router.get("/api/todo/:id", verifyToken, async (req, res) => {
     try {
-        const id = req.params.id;
-        if (isNaN(id)) {
+        const id = parseInt(req.params.id);
+        if (Number.isNaN(id)) {
             return res.status(400).json({ error: "Invalid ID." });
         }
 
-        const todo = await todoModel.findOne({ id: id });
+        const todo = await todoModel.findOne({ userId: req.user.id, id: id });
 
         if (!todo) {
             return res.status(404).json({ error: "Todo item not found." });
@@ -65,13 +66,16 @@ router.get("/api/todo/:id", async (req, res) => {
 
 
 // edit an item on the list
-router.patch("/api/todo/:id", async (req, res) => {
+router.patch("/api/todo/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ error: "Invalid ID." });
+        }
         const { text, isDone } = req.body;
 
         const todo = await todoModel.findOneAndUpdate(
-            { id: id },
+            { userId: req.user.id, id: id },
             { ...(text !== undefined && { text }), ...(isDone !== undefined && { isDone }) },
             { new: true }
         );
@@ -88,11 +92,14 @@ router.patch("/api/todo/:id", async (req, res) => {
 
 
 // delete an item on the list
-router.delete("/api/todo/:id", async (req, res) => {
+router.delete("/api/todo/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ error: "Invalid ID." });
+        }
 
-        const todo = await todoModel.findOneAndDelete({ id: id });
+        const todo = await todoModel.findOneAndDelete({userId: req.user.id, id: id });
         if (!todo) {
             return res.status(404).json({ error: "Todo item not found." });
         }

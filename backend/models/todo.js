@@ -5,6 +5,11 @@ import mongoose from "mongoose"
 
 const todoSchema = new mongoose.Schema({
     id: Number,
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
+    },
     text: String,
     isDone: {
         type: Boolean,

@@ -2,8 +2,8 @@ import express from "express"
 import bcrypt from "bcrypt"
 import userModel from '../models/user.js'
 import jwt from 'jsonwebtoken'
+import { jwtSecret } from "../config/key.js";
 
-const JWT_SECRET = 'my_super_secret_key_123!';
 const router = express.Router()
 
 router.post("/register", async (req,res) => {
@@ -27,7 +27,7 @@ router.post("/register", async (req,res) => {
 
 router.post("/login", async (req,res)=>{
     const { user, pwd} = req.body;
-    if(!user && !pwd) return res.status(400).json({"msg":"nigga put type ur name and password"})
+    if(!user || !pwd) return res.status(400).json({"msg":"nigga put type ur name and password"})
 
     const foundUser = await userModel.findOne({ 'username': user })
     if(!foundUser) return res.status(409).json({"error":`${user} doesnt exist`});
@@ -35,9 +35,13 @@ router.post("/login", async (req,res)=>{
     // evaluate password
     const match = await bcrypt.compare(pwd, foundUser.pwd)
     if(match){
-        const token = jwt.sign({ 'username': user, 'pwd': pwd }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(
+            { id: foundUser._id, username: foundUser.username }, 
+            jwtSecret, 
+            { expiresIn: '1h' }
+        );
         res.json({ token });
-        // res.json({'success':`User ${user} is logged in!`})
+        res.json({'success':`User ${user} is logged in!`})
     }else{
         res.sendStatus(401)
     }

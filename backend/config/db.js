@@ -1,11 +1,12 @@
 import mongoose from "mongoose"
+import { mongoURI } from "./key";
 
 
 
 
 async function connectDB() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/todos'), {
+        await mongoose.connect(mongoURI), {
             serverSelectionTimeoutMS: 5000 // stops trying after 5 seconds
         };
         console.log('Connected to MongoDB');

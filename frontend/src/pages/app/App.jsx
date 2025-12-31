@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { toggleItem, deleteItem, addItem } from "./services/services";
+import { toggleItem, deleteItem, addItem } from "../../services/services";
 import { FaTrash } from "react-icons/fa";
 import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
-import Edit from "./components/edit/edit";
+import Edit from "../../components/edit/edit";
+import './app.css'
+
+
 
 function TodoItems({ data, fetchData, setEdit }) {
   if (!data) return null;
@@ -47,14 +50,25 @@ function App() {
   const [edit, setEdit] = useState({ state: false, id: null, text: null });
 
   async function fetchData() {
+    
+    
     try {
-      const res = await fetch("http://localhost:5000/api/todo");
+      // Get the token from localStorage
+      const token = localStorage.getItem('token'); 
+
+      const res = await fetch("http://localhost:5000/api/todo", {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Pass the token here
+          'Content-Type': 'application/json'
+        }
+      });
       if (!res.ok) throw new Error("fetch request failed");
       const data = await res.json();
       setData(data);
-      console.log("fetch request succeded");
+      console.log("Fetch request succeeded");
     } catch (error) {
-      console.log(`ERR: ${error}`);
+      console.log(error);
     }
   }
 
