@@ -2,7 +2,7 @@ export async function toggleItem(id, currState) {
   try {
     const token = localStorage.getItem('token'); 
 
-    const res = await fetch(`http://localhost:5000/api/todo/${id}`, {
+    const res = await fetch(`${process.env.VITE_API_URL}/api/todo/${id}`, {
       method: "PATCH",
       headers: {
         'Authorization': `Bearer ${token}`, // Pass the token here
@@ -24,7 +24,7 @@ export async function editItem(id,text){
   try {
     const token = localStorage.getItem('token'); 
 
-    const res = await fetch(`http://localhost:5000/api/todo/${id}`, {
+    const res = await fetch(`${process.env.VITE_API_URL}/api/todo/${id}`, {
       method: "PATCH",
       headers: {
         'Authorization': `Bearer ${token}`, // Pass the token here
@@ -52,7 +52,7 @@ export async function deleteItem(id) {
   try {
     const token = localStorage.getItem('token'); 
 
-    const res = await fetch(`http://localhost:5000/api/todo/${id}`, {
+    const res = await fetch(`${process.env.VITE_API_URL}/api/todo/${id}`, {
       method: "DELETE",
       headers: {
         'Authorization': `Bearer ${token}`, // Pass the token here
@@ -75,7 +75,7 @@ export async function addItem(text) {
   try {
     const token = localStorage.getItem('token'); 
 
-    const res = await fetch(`http://localhost:5000/api/todo`, {
+    const res = await fetch(`${process.env.VITE_API_URL}/api/todo`, {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`, // Pass the token here

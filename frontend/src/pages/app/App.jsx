@@ -66,7 +66,7 @@ function App() {
       // Get the token from localStorage
       const token = localStorage.getItem('token'); 
 
-      const res = await fetch("http://localhost:5000/api/todo", {
+      const res = await fetch(`${process.env.VITE_API_URL}/api/todo`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, // Pass the token here
