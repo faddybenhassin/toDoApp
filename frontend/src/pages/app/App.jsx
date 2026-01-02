@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { toggleItem, deleteItem, addItem } from "../../services/services";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../util/authContext";
+import { toggleItem, deleteItem, addItem } from "../../util/services";
 import { FaTrash } from "react-icons/fa";
 import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
 import Edit from "../../components/edit/edit";
@@ -49,6 +51,14 @@ function App() {
   const [data, setData] = useState(null);
   const [edit, setEdit] = useState({ state: false, id: null, text: null });
 
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+    navigate('/login');
+  }
+
   async function fetchData() {
     
     
@@ -79,7 +89,10 @@ function App() {
   return (
     <>
       <div className="todoContainer">
-        <h1>ToDo:</h1>
+        <div className="todoHeader">
+          <h1>ToDo:</h1>
+          <button id="logoutBtn" onClick={handleLogout}>Logout</button>
+        </div>
 
         <div className="todoInput">
           <input

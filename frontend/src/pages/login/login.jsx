@@ -1,15 +1,17 @@
 import React,{useState} from 'react'
 import './login.css'
-
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../util/authContext';
 
 function Login() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
 
   const handleLogin = async () => {
-    console.log("hello?")
     setLoading(true);
 
     try {
@@ -22,11 +24,12 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save the JWT token (see step 2)
-        localStorage.setItem('token', data.token);
-        alert('Login successful!');
+        // Save the JWT token via context
+        login(data.token);
+        console.log('Login successful!');
+        navigate('/', { replace: true });
       } else {
-        alert(data.message || 'Login failed');
+        console.log(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error logging in:', error);
@@ -48,10 +51,10 @@ function Login() {
       
 
       <div className="btnContainer">
-        <button onClick={handleLogin} disabled={loading}>
+        <button className="primary" onClick={handleLogin} disabled={loading}>
         {loading ? 'Authenticating...' : 'Sign In Now'}
       </button>
-        <button className="register" >sign up</button>
+        <button className="register" onClick={() => navigate('/register')}>sign up</button>
       </div>
     </div>
   )

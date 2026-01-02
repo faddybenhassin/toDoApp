@@ -1,7 +1,7 @@
 import React from "react";
 import "./edit.css";
 import { useState } from "react";
-import {editItem} from '../../services/services'
+import {editItem} from '../../util/services'
 
 
 function Popup(props) {
