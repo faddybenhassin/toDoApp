@@ -6,9 +6,7 @@ import { mongoURI } from "./key.js";
 
 async function connectDB() {
     try {
-        await mongoose.connect(mongoURI, {
-            serverSelectionTimeoutMS: 5000 // stops trying after 5 seconds
-        });
+        await mongoose.connect(mongoURI);
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('MongoDB connection error:', error);
