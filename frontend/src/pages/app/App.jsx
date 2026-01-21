@@ -52,10 +52,10 @@ function App() {
   const [edit, setEdit] = useState({ state: false, id: null, text: null });
 
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
-  function handleLogout() {
-    logout();
+  function handleAuth() {
+    if(isAuthenticated) logout();
     navigate('/login');
   }
 
@@ -88,40 +88,42 @@ function App() {
 
   return (
     <>
-      <div className="todoContainer">
-        <div className="todoHeader">
-          <h1>ToDo:</h1>
-          <button id="logoutBtn" onClick={handleLogout}>Logout</button>
+      <div className="appContainer">
+        <button id="authBtn" onClick={handleAuth}>{isAuthenticated? "Logout": "login"}</button>
+        <div className="todoContainer">
+          <div className="todoHeader">
+            <h1>ToDo:</h1>
+          </div>
+
+          <div className="todoInput">
+            <input
+              type="text"
+              placeholder="add task"
+              onChange={(event) => {
+                setTodoInput(event.target.value);
+              }}
+              onKeyDown={async (event) => {
+                if (event.key == "Enter") {
+                  await addItem(todoInput);
+                  setTodoInput("");
+                  fetchData();
+                }
+              }}
+              value={todoInput}
+              />
+          </div>
+          <TodoItems data={data} fetchData={fetchData} setEdit={setEdit} />
         </div>
 
-        <div className="todoInput">
-          <input
-            type="text"
-            placeholder="add task"
-            onChange={(event) => {
-              setTodoInput(event.target.value);
-            }}
-            onKeyDown={async (event) => {
-              if (event.key == "Enter") {
-                await addItem(todoInput);
-                setTodoInput("");
-                fetchData();
-              }
-            }}
-            value={todoInput}
-          />
-        </div>
-        <TodoItems data={data} fetchData={fetchData} setEdit={setEdit} />
-      </div>
-
-      {edit.state ? (
-        <Edit
+        {edit.state ? (
+          <Edit
           fetchData={fetchData}
           setEdit={setEdit}
           id={edit.id}
           text={edit.text}
-        />
-      ) : null}
+          />
+        ) : null}
+      </div>
     </>
   );
 }
