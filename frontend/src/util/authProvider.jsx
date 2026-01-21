@@ -6,11 +6,30 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      setToken(savedToken);
+    async function verifyToken() {
+      const savedToken = localStorage.getItem('token');
+      
+      if (savedToken) {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/me`, {
+            method: "GET",
+            headers: { 'Authorization': `Bearer ${savedToken}` }
+          });
+
+          if (response.ok) {
+            setToken(savedToken);
+          } else {
+            // Server rejected the token (likely expired)
+            logout();
+          }
+        } catch (error) {
+          logout(); // Network error or server down
+        }
+      }
+      setLoading(false);
     }
-    setLoading(false);
+
+    verifyToken();
   }, []);
 
   function login(newToken) {
@@ -24,11 +43,15 @@ export function AuthProvider({ children }) {
     setToken(null);
   }
 
+  function isAuthenticated() {
+    return !!token;
+  }
+
   const value = {
     token,
     login,
     logout,
-    isAuthenticated: !!token,
+    isAuthenticated,
   };
 
   return (

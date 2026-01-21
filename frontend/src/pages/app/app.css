@@ -50,8 +50,8 @@
 
 
 
-#delBtn{ margin-left:auto; cursor:pointer; color: rgba(255, 99, 99, 0.9); transition: transform 0.12s ease; } #delBtn:hover{ transform: scale(1.06); }
-
+#delBtn, #editBtn{ margin-left:auto; cursor:pointer; color: rgba(255, 99, 99, 0.9); transition: transform 0.12s ease; } #delBtn:hover, #editBtn:hover{ transform: scale(1.06); }
+#editBtn{color: rgba(99, 255, 221, 0.9);}
 .todoHeader{ display:flex; align-items:center; gap:12px; }
 .todoHeader h1{ font-size:20px; color: white; }
 #authBtn{display: block;  margin-left:auto; padding:8px 12px; background: transparent; border:1px solid rgba(255,255,255,0.06); color:white; border-radius:8px; }

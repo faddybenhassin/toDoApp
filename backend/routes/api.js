@@ -11,12 +11,16 @@ router.post("/api/todo", verifyToken, async (req, res) => {
     if (typeof text !== "string" || text.trim().length === 0) {
         return res.status(400).json({ error: "No valid text provided." });
     }
+    if (typeof desc !== "string" || desc.trim().length === 0) {
+        return res.status(400).json({ error: "No valid text provided." });
+    }
 
     try {
         const lastTodo = await todoModel.findOne({ userId: req.user.id }).sort({ id: -1 });
         const todo = await todoModel.create({
             id: lastTodo ? lastTodo.id + 1 : 1,
             text: text.trim(),
+            desc: desc.trim(),
             userId: req.user.id,
         });
         await todo.save();
@@ -72,11 +76,11 @@ router.patch("/api/todo/:id", verifyToken, async (req, res) => {
         if (Number.isNaN(id)) {
             return res.status(400).json({ error: "Invalid ID." });
         }
-        const { text, isDone } = req.body;
+        const { text, desc, isDone } = req.body;
 
         const todo = await todoModel.findOneAndUpdate(
             { userId: req.user.id, id: id },
-            { ...(text !== undefined && { text }), ...(isDone !== undefined && { isDone }) },
+            { ...(text !== undefined && { text }), ...(desc !== undefined && { desc }), ...(isDone !== undefined && { isDone }) },
             { new: true }
         );
         if (!todo) {
@@ -110,5 +114,16 @@ router.delete("/api/todo/:id", verifyToken, async (req, res) => {
         return res.status(500).json({ error: "Could not delete item." });
     }
 });
+
+
+
+router.get('/me', verifyToken, (req, res) => {
+    // req.user was populated by the verifyToken middleware
+    res.json({ 
+        authenticated: true, 
+        user: req.user 
+    });
+});
+    
 
 export default router;
