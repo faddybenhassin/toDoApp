@@ -7,7 +7,7 @@ const router = express.Router()
 
 // add item to the list
 router.post("/api/todo", verifyToken, async (req, res) => {
-    const { text } = req.body;
+    const { text, desc } = req.body;
     if (typeof text !== "string" || text.trim().length === 0) {
         return res.status(400).json({ error: "No valid text provided." });
     }

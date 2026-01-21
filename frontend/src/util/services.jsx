@@ -71,7 +71,7 @@ export async function deleteItem(id) {
 
 
 
-export async function addItem(text) {
+export async function addItem(task) {
   try {
     const token = localStorage.getItem('token'); 
 
@@ -81,7 +81,7 @@ export async function addItem(text) {
         'Authorization': `Bearer ${token}`, // Pass the token here
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ text: text }),
+      body: JSON.stringify(task),
     });
     if (!res.ok) {
       throw new Error("Add request failed");

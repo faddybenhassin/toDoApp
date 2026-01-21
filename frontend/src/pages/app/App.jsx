@@ -5,11 +5,12 @@ import { toggleItem, deleteItem, addItem } from "../../util/services";
 import { FaTrash } from "react-icons/fa";
 import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
 import Edit from "../../components/edit/edit";
+import Desc from "../../components/desc/desc"
 import './app.css'
 
 
 
-function TodoItems({ data, fetchData, setEdit }) {
+function TodoItems({ data, fetchData, setEdit, setDesc}) {
   if (!data) return null;
   return data.map((item) => {
     return (
@@ -28,12 +29,19 @@ function TodoItems({ data, fetchData, setEdit }) {
           className="item"
           style={{ textDecoration: item.isDone ? "line-through" : "none" }}
           onClick={() => {
-            setEdit({ state: true, id: item.id, text: item.text });
+            setDesc({ state: true, text: item.text, desc: item.desc});
           }}
         >
           {item.text}
         </p>
 
+        <FaTrash
+          // id="editBtn"
+          id="delBtn"
+          onClick={() => {
+            setEdit({ state: true, id: item.id, text: item.text});
+          }}
+        />
         <FaTrash
           id="delBtn"
           onClick={async () => {
@@ -50,6 +58,7 @@ function App() {
   const [todoInput, setTodoInput] = useState("");
   const [data, setData] = useState(null);
   const [edit, setEdit] = useState({ state: false, id: null, text: null });
+  const [desc, setDesc] = useState({ state: false, text: null, desc: null });
 
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
@@ -81,7 +90,28 @@ function App() {
       console.log(error);
     }
   }
+async function handleAddTask() {
+  if (!todoInput.trim()) return;
 
+  // 1. Parse the input into a structured object
+  const [rawTitle, ...descParts] = todoInput.split("/");
+  // const tagMatch = rawTitle.match(/@(\w+)/);
+  
+  const newTask = {
+    text: rawTitle.replace(/@\w+/, "").trim(),
+    desc: descParts.join("/").trim() || "",
+    // tag: tagMatch ? tagMatch[1] : "general",
+  };
+
+  // 2. Send the structured object
+  try {
+    await addItem(newTask); 
+    setTodoInput("");
+    fetchData();
+  } catch (error) {
+    console.error("Failed to add task:", error);
+  }
+};
   useEffect(() => {
     fetchData();
   }, []);
@@ -98,21 +128,19 @@ function App() {
           <div className="todoInput">
             <input
               type="text"
-              placeholder="add task"
+              placeholder="@tag task / description"
               onChange={(event) => {
                 setTodoInput(event.target.value);
               }}
+              value={todoInput}
               onKeyDown={async (event) => {
                 if (event.key == "Enter") {
-                  await addItem(todoInput);
-                  setTodoInput("");
-                  fetchData();
+                  handleAddTask()
                 }
               }}
-              value={todoInput}
               />
           </div>
-          <TodoItems data={data} fetchData={fetchData} setEdit={setEdit} />
+          <TodoItems data={data} fetchData={fetchData} setEdit={setEdit} setDesc={setDesc}/>
         </div>
 
         {edit.state ? (
@@ -121,6 +149,13 @@ function App() {
           setEdit={setEdit}
           id={edit.id}
           text={edit.text}
+          />
+        ) : null}
+        {desc.state ? (
+          <Desc
+          setDesc={setDesc}
+          text={desc.text}
+          desc={desc.desc}
           />
         ) : null}
       </div>

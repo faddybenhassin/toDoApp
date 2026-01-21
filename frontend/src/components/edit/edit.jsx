@@ -16,6 +16,7 @@ function Popup(props) {
           onChange={(event) => {
             setNewItem(event.target.value);
           }}
+          value={newText}
           onKeyDown={async (event) => {
             if (event.key == "Enter") {
               await editItem(props.id, newText);
@@ -25,7 +26,6 @@ function Popup(props) {
               props.setEdit({state:false,id:null,text:null})
             }
           }}
-          value={newText}
         />
       </div>
     </div>
