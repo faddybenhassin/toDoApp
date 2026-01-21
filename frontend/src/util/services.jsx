@@ -20,7 +20,7 @@ export async function toggleItem(id, currState) {
   }
 }
 
-export async function editItem(id,text){
+export async function editItem(id,task){
   try {
     const token = localStorage.getItem('token'); 
 
@@ -30,7 +30,7 @@ export async function editItem(id,text){
         'Authorization': `Bearer ${token}`, // Pass the token here
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ text: text }),
+      body: JSON.stringify(task),
     });
     if (!res.ok) {
       throw new Error("Edit request failed");

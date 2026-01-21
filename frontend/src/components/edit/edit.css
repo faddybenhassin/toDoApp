@@ -1,7 +1,7 @@
 .editContainer{
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.75));
+  background: linear-gradient(180deg, rgba(2,6,23,0.9), rgba(2,6,23,0.95));
   display: flex;
   align-items: center;
   justify-content: center;

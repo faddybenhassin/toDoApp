@@ -18,8 +18,10 @@ function Popup(props) {
 
   return (
     <div className="descContainer">
-      <h1>{props.text}</h1>
-      <p>{props.desc}</p>
+      <div className="desc">
+        <h1>{props.text}</h1>
+        <p>{props.desc}</p>
+      </div>
     </div>
   );
 }

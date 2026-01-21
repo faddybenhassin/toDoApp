@@ -15,7 +15,7 @@ connectDB();
 
 app.use("/auth", authRoutes);
 
-app.use("/", apiRoutes);
+app.use("/api", apiRoutes);
 
 
 

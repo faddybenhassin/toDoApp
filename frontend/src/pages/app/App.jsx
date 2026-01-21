@@ -111,6 +111,8 @@ function App() {
       console.error("Failed to add task:", error);
     }
   };
+
+  
   useEffect(() => {
     fetchData();
   }, []);

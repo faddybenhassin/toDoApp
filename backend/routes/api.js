@@ -6,7 +6,7 @@ const router = express.Router()
 
 
 // add item to the list
-router.post("/api/todo", verifyToken, async (req, res) => {
+router.post("/todo", verifyToken, async (req, res) => {
     const { text, desc } = req.body;
     if (typeof text !== "string" || text.trim().length === 0) {
         return res.status(400).json({ error: "No valid text provided." });
@@ -34,7 +34,7 @@ router.post("/api/todo", verifyToken, async (req, res) => {
 
 
 //get all todo items
-router.get("/api/todo", verifyToken, async (req, res) => {
+router.get("/todo", verifyToken, async (req, res) => {
     try {
         const todos = await todoModel.find({ userId: req.user.id });
         res.json(todos);
@@ -47,7 +47,7 @@ router.get("/api/todo", verifyToken, async (req, res) => {
 
 
 // get a specific todo item
-router.get("/api/todo/:id", verifyToken, async (req, res) => {
+router.get("/todo/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         if (Number.isNaN(id)) {
@@ -70,7 +70,7 @@ router.get("/api/todo/:id", verifyToken, async (req, res) => {
 
 
 // edit an item on the list
-router.patch("/api/todo/:id", verifyToken, async (req, res) => {
+router.patch("/todo/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         if (Number.isNaN(id)) {
@@ -96,7 +96,7 @@ router.patch("/api/todo/:id", verifyToken, async (req, res) => {
 
 
 // delete an item on the list
-router.delete("/api/todo/:id", verifyToken, async (req, res) => {
+router.delete("/todo/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         if (Number.isNaN(id)) {
@@ -119,7 +119,7 @@ router.delete("/api/todo/:id", verifyToken, async (req, res) => {
 
 router.get('/me', verifyToken, (req, res) => {
     // req.user was populated by the verifyToken middleware
-    res.json({ 
+    res.status(200).json({ 
         authenticated: true, 
         user: req.user 
     });
