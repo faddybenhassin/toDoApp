@@ -12,7 +12,7 @@ router.post("/api/todo", verifyToken, async (req, res) => {
         return res.status(400).json({ error: "No valid text provided." });
     }
     if (typeof desc !== "string" || desc.trim().length === 0) {
-        return res.status(400).json({ error: "No valid text provided." });
+        return res.status(400).json({ error: "No valid description provided." });
     }
 
     try {
