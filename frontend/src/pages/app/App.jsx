@@ -113,7 +113,6 @@ function App() {
   };
   useEffect(() => {
     fetchData();
-    isAuthenticated();
   }, []);
 
   return (
