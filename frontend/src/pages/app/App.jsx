@@ -7,6 +7,7 @@ import { RiCheckboxCircleFill, RiCheckboxCircleLine } from "react-icons/ri";
 import Edit from "../../components/edit/edit";
 import Desc from "../../components/desc/desc"
 import './app.css'
+import handleInput from "../../util/handleInput";
 
 
 
@@ -38,7 +39,7 @@ function TodoItems({ data, fetchData, setEdit, setDesc}) {
         <FaPen
           id="editBtn"
           onClick={() => {
-            setEdit({ state: true, id: item.id, text: item.text});
+            setEdit({ state: true, id: item.id, text: item.text, desc: item.desc});
           }}
         />
         <FaTrash
@@ -56,7 +57,7 @@ function TodoItems({ data, fetchData, setEdit, setDesc}) {
 function App() {
   const [todoInput, setTodoInput] = useState("");
   const [data, setData] = useState(null);
-  const [edit, setEdit] = useState({ state: false, id: null, text: null });
+  const [edit, setEdit] = useState({ state: false, id: null, text: null, desc: null  });
   const [desc, setDesc] = useState({ state: false, text: null, desc: null });
 
   const navigate = useNavigate();
@@ -89,34 +90,12 @@ function App() {
       console.log(error);
     }
   }
-  async function handleAddTask() {
-    if (!todoInput.trim()) return;
-
-    // 1. Parse the input into a structured object
-    const [rawTitle, ...descParts] = todoInput.split("/");
-    // const tagMatch = rawTitle.match(/@(\w+)/);
-    
-    const newTask = {
-      text: rawTitle.replace(/@\w+/, "").trim(),
-      desc: descParts.join("/").trim() || "no description provided",
-      // tag: tagMatch ? tagMatch[1] : "general",
-    };
-
-    // 2. Send the structured object
-    try {
-      await addItem(newTask); 
-      setTodoInput("");
-      fetchData();
-    } catch (error) {
-      console.error("Failed to add task:", error);
-    }
-  };
-
+  
   
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   return (
     <>
       <div className="appContainer">
@@ -136,7 +115,14 @@ function App() {
               value={todoInput}
               onKeyDown={async (event) => {
                 if (event.key == "Enter") {
-                  handleAddTask()
+                  try {
+                    const newTask = handleInput(todoInput)
+                    await addItem(newTask); 
+                    setTodoInput("");
+                    fetchData();
+                  } catch (error) {
+                    console.error("Failed to add task:", error);
+                  }
                 }
               }}
               />
@@ -150,6 +136,7 @@ function App() {
           setEdit={setEdit}
           id={edit.id}
           text={edit.text}
+          desc={edit.desc}
           />
         ) : null}
         {desc.state ? (
