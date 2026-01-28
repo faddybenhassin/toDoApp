@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './register.css'
 import { useAuth } from '../../util/authContext';
 import { useNavigate } from 'react-router-dom';
-
+import { toast } from 'sonner';
 
 function Register() {
     const [user, setUser] = useState('');
@@ -42,13 +42,17 @@ function Register() {
                     console.log('Registration succeeded but automatic login failed.');
                   }
                 }
-
+                toast.success("Signed up successfully");
                 console.log('sign up successful!');
             }else{
-                console.log(data.message || "sign up failed");
+                console.log(data.err || "sign up failed");
+                toast.error(data.err || "sign up failed");
+                
             }
         } catch (error) {
-            console.error('Error signing up:', error);
+            console.error('Error signing up:', error);      
+            toast.error('Error signing up:', error);
+            
         } finally {
           setLoading(false);
         };

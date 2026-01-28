@@ -2,6 +2,8 @@ import React,{useState} from 'react'
 import './login.css'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../util/authContext';
+import { toast } from "sonner";
+
 
 function Login() {
   const [user, setUser] = useState('');
@@ -28,12 +30,14 @@ function Login() {
         // Save the JWT token via context
         login(data.token);
         console.log('Login successful!');
+        toast.success("Logged in successfully");
         navigate('/', { replace: true });
       } else {
         console.log(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error logging in:', error);
+      toast.error("Invalid credentials");
     } finally {
       setLoading(false);
     }

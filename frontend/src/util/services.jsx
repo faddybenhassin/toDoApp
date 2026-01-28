@@ -1,3 +1,6 @@
+import { toast } from "sonner";
+
+
 export async function toggleItem(id, currState) {
   try {
     const token = localStorage.getItem('token'); 
@@ -14,9 +17,11 @@ export async function toggleItem(id, currState) {
       throw new Error("Toggle request failed");
     } else {
       console.log("Toggle request succeeded");
+      toast.success("Task updated");
     }
   } catch (error) {
     console.log(`${error}`);
+    toast.error("Failed to update task");
   }
 }
 
@@ -36,9 +41,11 @@ export async function editItem(id,task){
       throw new Error("Edit request failed");
     } else {
       console.log("Edit request succeeded");
+      toast.success("Task edited");
     }
   } catch (error) {
     console.log(`${error}`);
+    toast.error("Failed to edit task");
   }
 }
 
@@ -63,9 +70,11 @@ export async function deleteItem(id) {
       throw new Error("Delete request failed");
     } else {
       console.log("Delete request succeeded");
+      toast.success("Task deleted 🗑️");
     }
   } catch (error) {
     console.log(`ERR: ${error}`);
+    toast.error("Failed to delete task");
   }
 }
 
@@ -87,8 +96,10 @@ export async function addItem(task) {
       throw new Error("Add request failed");
     } else {
       console.log("Add request succeeded");
+      toast.success("Task added ✅");
     }
   } catch (error) {
     console.log(`ERR: ${error}`);
+    toast.error("Failed to add task");
   }
 }
