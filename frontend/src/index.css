@@ -5,66 +5,60 @@
 }
 
 :root {
-  --bg-1: #071025;
-  --bg-2: #081229;
+  --bg-dark: #071025;
   --accent: #6c5ce7;
-  --accent-2: #00d4ff;
-  --surface: #0f1724;
-  --muted: #9aa4b2;
-  --card-bg: rgba(255,255,255,0.04);
+  --accent-glow: rgba(108, 92, 231, 0.3);
+  --text-main: #e6eef8;
+  --text-muted: #9aa4b2;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
   --radius: 12px;
-  --glass: rgba(255,255,255,0.04);
 }
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at 10% 10%, rgba(124,92,255,0.06), transparent 20%), linear-gradient(135deg, var(--bg-1), var(--bg-2));
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  color: #e6eef8;
-  /* display: flex;
-  justify-content: center;
-  align-items: flex-start; */
+  background: radial-gradient(circle at 10% 10%, rgba(124,92,255,0.06), transparent 20%), 
+              linear-gradient(135deg, #071025, #081229);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-main);
   padding: 48px 20px;
+  display: flex;
+  justify-content: center;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* global controls */
 button {
   cursor: pointer;
   border: none;
   background: var(--accent);
   color: white;
   border-radius: 8px;
-  padding: 8px 14px;
+  padding: 10px 18px;
   font-weight: 600;
-  transition: transform .12s ease, filter .12s ease, background .12s ease;
+  transition: all 0.2s ease;
 }
-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
 input {
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: transparent;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.2);
   color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* content wrapper to center pages */
-.app-root {
-  width: 100%;
-  max-width: 980px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-/* focus states and responsiveness */
-input:focus, textarea:focus { outline: none; box-shadow: 0 6px 20px rgba(108,92,231,0.08); border-color: rgba(108,92,231,0.9); }
-
-button.primary { background: linear-gradient(90deg,var(--accent),var(--accent-2)); }
-
-@media (max-width: 640px){
-  body { padding: 28px 12px; }
-  .todoContainer { margin-top: 28px; padding: 18px; }
-  .loginContainer, .registerContainer { margin-top: 40px; padding: 18px; }
+@media (max-width: 640px) {
+  body { padding: 20px 12px; }
 }

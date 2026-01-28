@@ -99,7 +99,9 @@ function App() {
   return (
     <>
       <div className="appContainer">
-        <button id="authBtn" onClick={handleAuth}>{isAuthenticated()? "Logout": "login"}</button>
+        <nav class="top-nav">
+          <button id="authBtn" onClick={handleAuth}>{isAuthenticated()? "Logout": "login"}</button>
+        </nav>
         <div className="todoContainer">
           <div className="todoHeader">
             <h1>ToDo:</h1>
