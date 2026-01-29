@@ -7,12 +7,15 @@ const router = express.Router()
 
 // add item to the list
 router.post("/todo", verifyToken, async (req, res) => {
-    const { text, desc } = req.body;
+    const { text, desc, tag } = req.body;
     if (typeof text !== "string" || text.trim().length === 0) {
         return res.status(400).json({ error: "No valid text provided." });
     }
     if (typeof desc !== "string" || desc.trim().length === 0) {
         return res.status(400).json({ error: "No valid description provided." });
+    }
+    if (typeof tag !== "number"  || tag > 5 || tag < 1) {
+        return res.status(400).json({ error: "No valid tag provided." });
     }
 
     try {
@@ -21,6 +24,7 @@ router.post("/todo", verifyToken, async (req, res) => {
             id: lastTodo ? lastTodo.id + 1 : 1,
             text: text.trim(),
             desc: desc.trim(),
+            tag: tag || 5,
             userId: req.user.id,
         });
         await todo.save();
@@ -36,7 +40,8 @@ router.post("/todo", verifyToken, async (req, res) => {
 //get all todo items
 router.get("/todo", verifyToken, async (req, res) => {
     try {
-        const todos = await todoModel.find({ userId: req.user.id });
+        const todos = await todoModel.find({ userId: req.user.id })
+                                      .sort({ priority: 1 });
         res.json(todos);
     } catch (error) {
         console.log(error);
@@ -76,11 +81,11 @@ router.patch("/todo/:id", verifyToken, async (req, res) => {
         if (Number.isNaN(id)) {
             return res.status(400).json({ error: "Invalid ID." });
         }
-        const { text, desc, isDone } = req.body;
+        const { text, desc, tag, isDone } = req.body;
 
         const todo = await todoModel.findOneAndUpdate(
             { userId: req.user.id, id: id },
-            { ...(text !== undefined && { text }), ...(desc !== undefined && { desc }), ...(isDone !== undefined && { isDone }) },
+            { ...(text !== undefined && { text }), ...(desc !== undefined && { desc }), ...(isDone !== undefined && { isDone }), ...(tag !== undefined && { tag }) },
             { new: true }
         );
         if (!todo) {

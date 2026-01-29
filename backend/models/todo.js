@@ -12,6 +12,7 @@ const todoSchema = new mongoose.Schema({
     },
     text: String,
     desc: String,
+    tag: Number,
     isDone: {
         type: Boolean,
         default: false
