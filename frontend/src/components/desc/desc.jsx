@@ -5,7 +5,7 @@ function Popup(props) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        props.setDesc({ state: false, text: null, desc: null });
+        props.setDesc({ state: false, tag: null, text: null, desc: null });
       }
     };
 
@@ -19,8 +19,7 @@ function Popup(props) {
   return (
     <div className="descContainer">
       <div className="desc">
-        <h1>{props.text}</h1>
-        <p>{props.desc}</p>
+        <input type="text" disabled="true" value={`@${props.tag} ${props.text} / ${props.desc}`} />
       </div>
     </div>
   );

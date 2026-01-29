@@ -41,7 +41,7 @@ router.post("/todo", verifyToken, async (req, res) => {
 router.get("/todo", verifyToken, async (req, res) => {
     try {
         const todos = await todoModel.find({ userId: req.user.id })
-                                      .sort({ priority: 1 });
+                                      .sort({ tag: 1 });
         res.json(todos);
     } catch (error) {
         console.log(error);

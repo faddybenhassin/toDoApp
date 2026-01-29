@@ -13,6 +13,15 @@ import handleInput from "../../util/handleInput";
 
 function TodoItems({ data, fetchData, setEdit, setDesc}) {
   if (!data) return null;
+
+  const priorityMap = {
+    1 : "critical",
+    2 : "high",
+    3 : "medium",
+    4 : "low",
+    5 : "lowest"
+  };
+
   return data.map((item) => {
     return (
       <div className="todoItem" key={item.id}>
@@ -30,7 +39,7 @@ function TodoItems({ data, fetchData, setEdit, setDesc}) {
           className="item"
           style={{ textDecoration: item.isDone ? "line-through" : "none" }}
           onClick={() => {
-            setDesc({ state: true, text: item.text, desc: item.desc});
+            setDesc({ state: true, tag: priorityMap[item.tag], text: item.text, desc: item.desc});
           }}
         >
           {item.text}
@@ -39,7 +48,7 @@ function TodoItems({ data, fetchData, setEdit, setDesc}) {
         <FaPen
           id="editBtn"
           onClick={() => {
-            setEdit({ state: true, id: item.id, text: item.text, desc: item.desc});
+            setEdit({ state: true, tag: priorityMap[item.tag], id: item.id, text: item.text, desc: item.desc});
           }}
         />
         <FaTrash
@@ -137,6 +146,7 @@ function App() {
           fetchData={fetchData}
           setEdit={setEdit}
           id={edit.id}
+          tag={edit.tag}
           text={edit.text}
           desc={edit.desc}
           />
@@ -144,6 +154,7 @@ function App() {
         {desc.state ? (
           <Desc
           setDesc={setDesc}
+          tag={desc.tag}
           text={desc.text}
           desc={desc.desc}
           />
